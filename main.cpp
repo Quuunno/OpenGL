@@ -39,14 +39,37 @@ int main (void)
 				readText("shaders/fragment.glsl").c_str());
 			Shader * shaders [] {vxs, frs};
 			ShaderProgram * spr = new ShaderProgram(shaders, 2);
-			glUseProgram(spr->getId());
 			
+			GLfloat verticles [] {
+				-0.5f, -0.5f, 0.0f,
+				 0.0f,  0.5f, 0.0f,
+				 0.5f, -0.5f, 0.0f
+			};
+			
+			GLuint VBO; glGenBuffers(1, &VBO);
+			GLuint VAO; glGenVertexArrays(1, &VAO);
+			glBindVertexArray(VAO);
+				
+				glBindBuffer(GL_ARRAY_BUFFER, VBO);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(verticles),
+					verticles, GL_STATIC_DRAW);
+				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * 
+					sizeof(GLfloat), (GLvoid *) 0);
+				glEnableVertexAttribArray(0);
+				
+			glBindVertexArray(0);
+
 			while (!glfwWindowShouldClose(window))
 			{
 				glfwPollEvents();
 				
 				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 				glClear(GL_COLOR_BUFFER_BIT);
+				
+				glUseProgram(spr->getId());
+				glBindVertexArray(VAO);
+				glDrawArrays(GL_TRIANGLES, 0, 3);
+				glBindVertexArray(0);
 				
 				glfwSwapBuffers(window);
 			}

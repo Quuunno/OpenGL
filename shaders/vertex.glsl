@@ -1,10 +1,8 @@
 #version 330 core
 
-in vec3 vertex;
-
-out vec4 position;
+layout (location = 0) in vec3 vertex;
 
 void main ( void )
 {
-	position = vec4(vertex, 1.0f);
+	gl_Position = vec4(vertex, 1.0f);
 }
